@@ -6,4 +6,5 @@
   :main thesortinghat.core
   :plugins [[com.jakemccrary/lein-test-refresh "0.20.0"]
             [lein-cloverage "1.0.9"]]
-  :dependencies [[org.clojure/clojure "1.8.0"]])
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/data.csv "0.1.4"]])
