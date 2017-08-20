@@ -26,15 +26,14 @@
 (def identifiers
   [:last-name :first-name :date-of-birth])
 
-(defn field-count-match? [readable separator]
-  (with-open [reader (io/reader readable)]
-    (= (count (first
-                (csv/read-csv reader :separator separator)))
-       (count fields))))
+(defn field-count-match? [csv-string separator]
+  (= (count (first
+              (csv/read-csv csv-string :separator separator)))
+     (count fields)))
 
-(defn detect-separator [readable]
+(defn detect-separator [csv-string]
   (first
-    (filter #(field-count-match? readable %) separators)))
+    (filter #(field-count-match? csv-string %) separators)))
 
 (defn parse-date
   "Given a string, tries to parse it from a list of expected patterns.

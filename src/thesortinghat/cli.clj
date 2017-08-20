@@ -21,7 +21,7 @@
     (let [file (io/file (first args))]
       (if (.exists file)
         (do
-          (if-let [separator (hat/detect-separator file)]
+          (if-let [separator (hat/detect-separator (slurp file))]
             (let [records (hat/read-records file separator)]
               (println "*** By gender:")
               (print-records (hat/by-gender records))

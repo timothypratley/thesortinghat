@@ -25,7 +25,7 @@
 
 (defn post-record [{:keys [body] :as request}]
   (let [body-string (slurp body)
-        separator (hat/detect-separator (io/string-input-stream body-string))]
+        separator (hat/detect-separator body-string)]
     (if separator
       (let [[record] (hat/read-records
                        (io/string-input-stream body-string)

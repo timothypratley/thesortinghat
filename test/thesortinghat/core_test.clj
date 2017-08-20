@@ -6,9 +6,9 @@
             [java-time :as time]))
 
 (deftest detect-separator-test
-  (is (= \, (hat/detect-separator (io/resource "people.csv"))))
-  (is (= \| (hat/detect-separator (io/resource "people.psv"))))
-  (is (= \space (hat/detect-separator (io/resource "people.ssv")))))
+  (is (= \, (hat/detect-separator (slurp (io/resource "people.csv")))))
+  (is (= \| (hat/detect-separator (slurp (io/resource "people.psv")))))
+  (is (= \space (hat/detect-separator (slurp (io/resource "people.ssv"))))))
 
 (deftest parse-date-test
   (is (= (time/local-date 1990 12 30)

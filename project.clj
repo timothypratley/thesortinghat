@@ -3,7 +3,7 @@
   :url "http://github.com/timothypratley/thesortinghat"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :main thesortinghat.core
+  :main thesortinghat.cli
   :ring {:handler thesortinghat.server/handler}
   :plugins [[com.jakemccrary/lein-test-refresh "0.20.0"]
             [lein-cloverage "1.0.9"]

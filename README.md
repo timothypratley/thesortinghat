@@ -15,6 +15,14 @@ To read a file using the command line interface:
 
 `lein run <input-file>`
 
+Example input files are provided in resources:
+
+`lein run resources/people.csv`
+
+Input files are expected to consist of only records separated by lines
+with field separated by commas, pipes, or spaces.
+Fields may be quoted if they contain a separator.
+
 
 ### REST API
 
@@ -30,6 +38,21 @@ curl -X POST \
      -d 'Potter, Harry, male, green, 1/1/1985' \
      localhost:3000/records
 ```
+
+```
+curl -X POST \
+     -H 'Content-Type: application/text' \
+     -d 'Granger | Hermione | female | red | 3/1/1985' \
+     localhost:3000/records
+```
+
+```
+curl -X POST \
+     -H 'Content-Type: application/text' \
+     -d 'Weasley Ginny female orange 4/4/1986' \
+     localhost:3000/records
+```
+
 
 To retrieve records:
 

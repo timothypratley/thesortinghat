@@ -24,9 +24,10 @@
 
 (deftest stateful-test
   (testing "Received two records about Harry, and one about Hermione..."
-    (post "Potter" "Harry" "male" "blue" "1/1/1985")
-    (post "Potter" "Harry" "male" "green" "1/1/1985")
-    (post "Granger" "Hermione" "female" "red" "3/1/1985")
+    (with-out-str
+      (post "Potter" "Harry" "male" "blue" "1/1/1985")
+      (post "Potter" "Harry" "male" "green" "1/1/1985")
+      (post "Granger" "Hermione" "female" "red" "3/1/1985"))
     (is (= "[{\"last-name\":\"Granger\",\"first-name\":\"Hermione\",\"date-of-birth\":\"3/1/1985\",\"gender\":\"female\",\"favorite-color\":\"red\"},{\"last-name\":\"Potter\",\"first-name\":\"Harry\",\"date-of-birth\":\"1/1/1985\",\"gender\":\"male\",\"favorite-color\":\"green\"}]"
            (:body (server/handler (mock/request :get "/records/name"))))
         "There is only two records (one for Harry, one for Hermione) returned in JSON in the correct order")))
