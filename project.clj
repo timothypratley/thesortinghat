@@ -13,4 +13,5 @@
                  [clojure.java-time "0.3.0"]
                  [ring "1.6.2"]
                  [ring/ring-mock "0.3.1"]
+                 [ring/ring-json "0.4.0"]
                  [compojure "1.6.0"]])

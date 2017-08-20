@@ -3,10 +3,12 @@
     [thesortinghat.core :as hat]
     [clojure.string :as string]
     [compojure.core :refer [GET POST] :as compojure]
-    [compojure.route :as route]
     [compojure.handler :as handler]
+    [compojure.route :as route]
     [hiccup.core :as hiccup]
-    [ring.util.io :as io]))
+    [ring.util.io :as io]
+    [ring.util.response :as response]
+    [ring.middleware.json :as json]))
 
 (defonce
   ^{:docstring "The state of the server is a map of records
@@ -43,8 +45,8 @@
 (defn query [sort-fn]
   (->> (current-records)
        (sort-fn)
-       (map hat/format-record)
-       (string/join \newline)))
+       (map #(update % :date-of-birth hat/format-date))
+       (response/response)))
 
 (def routes
   (compojure/routes
@@ -57,4 +59,6 @@
     (route/not-found "Not found")))
 
 (def handler
-  (handler/api #'routes))
+  (-> #'routes
+      (json/wrap-json-response)
+      (handler/api)))
