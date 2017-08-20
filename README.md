@@ -5,7 +5,7 @@ Displays lists of people sorted by their attributes.
 
 >Enchanted hat that once belonged to Godric Gryffindor and sorts students into Hogwarts houses
 
-[Image of The Sorting Hat](https://images.pottermore.com/bxd3o8b291gf/2sLwPSOVqoOyCkEgSk0Oek/2c207d3a33dc10649554efc3014152da/MinervaMcGonagall_PM_B1C7M2_HarryPotterBeingSortedInGreatHall_Moment.jpg?w=1100&q=85)
+![Image of The Sorting Hat](https://images.pottermore.com/bxd3o8b291gf/2sLwPSOVqoOyCkEgSk0Oek/2c207d3a33dc10649554efc3014152da/MinervaMcGonagall_PM_B1C7M2_HarryPotterBeingSortedInGreatHall_Moment.jpg?w=1100&q=85)
 
 ## Usage
 
