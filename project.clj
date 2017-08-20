@@ -1,5 +1,5 @@
 (defproject thesortinghat "0.1.0-SNAPSHOT"
-  :description "The Sorting Hat; reads records about people and displays list of people sorted by attribute"
+  :description "Reads records about people and displays list of people sorted by attribute"
   :url "http://github.com/timothypratley/thesortinghat"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
