@@ -3,15 +3,8 @@
     [clojure.data.csv :as csv]
     [clojure.java.io :as io]
     [clojure.string :as string]
-    [java-time :as time]
-    [java-time.format :as time-format])
+    [java-time :as time])
   (:import (java.io File)))
-
-(def usage-message
-  "Usage: lein run <filename>\n")
-
-(def not-found-message
-  "File not found\n")
 
 (def separators
   [\, \| \space])
@@ -76,23 +69,3 @@
         (update x :date-of-birth format-date)
         (map x fields)
         (string/join ", " x)))
-
-(defn print-records [records]
-  (doseq [record records]
-    (println (format-record record))))
-
-(defn -main [& args]
-  (if (= 1 (count args))
-    (let [file (io/file (first args))]
-      (if (.exists file)
-        (do
-          (let [records (read-file file (detect-separator file))]
-            (println "*** By gender:")
-            (print-records (by-gender records))
-            (println "*** By birth date:")
-            (print-records (by-birth-date records))
-            (println "*** By last-name:")
-            (print-records (by-last-name records)))
-          :done)
-        (print not-found-message)))
-    (print usage-message)))

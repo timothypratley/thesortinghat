@@ -1,6 +1,6 @@
 (ns thesortinghat.server
   (:require
-    [thesortinghat.core :as thesortinghat]
+    [thesortinghat.core :as hat]
     [compojure.core :refer [GET POST] :as compojure]
     [compojure.route :as route]
     [compojure.handler :as handler]
