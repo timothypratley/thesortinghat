@@ -18,9 +18,18 @@ To read a file using the command line interface:
 
 ### REST API
 
-To submit records via REST:
+Start the server:
 
-`curl -xPOST -d'last,first,gender,color,dob' http://localhost:3000/records`
+`lein ring server`
+
+To submit records via curl:
+
+```
+curl -X POST \
+     -H 'Content-Type: application/text' \
+     -d 'Potter, Harry, male, green, 1/1/1985' \
+     localhost:3000/records
+```
 
 To retrieve records:
 
