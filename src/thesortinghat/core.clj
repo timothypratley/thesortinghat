@@ -3,8 +3,7 @@
     [clojure.data.csv :as csv]
     [clojure.java.io :as io]
     [clojure.string :as string]
-    [java-time :as time])
-  (:import (java.io File)))
+    [java-time :as time]))
 
 (def separators
   [\, \| \space])
@@ -21,15 +20,21 @@
 (def fields
   [:last-name :first-name :gender :favorite-color :date-of-birth])
 
-(defn field-count-match? [file separator]
-  (with-open [reader (io/reader file)]
+(def no-separator-message
+  (str "No records found. Expected something like '" (string/join ", " (map name fields)) "'.\n"))
+
+(def identifiers
+  [:last-name :first-name :date-of-birth])
+
+(defn field-count-match? [readable separator]
+  (with-open [reader (io/reader readable)]
     (= (count (first
                 (csv/read-csv reader :separator separator)))
        (count fields))))
 
-(defn detect-separator [file]
+(defn detect-separator [readable]
   (first
-    (filter #(field-count-match? file %) separators)))
+    (filter #(field-count-match? readable %) separators)))
 
 (defn parse-date
   "Given a string, tries to parse it from a list of expected patterns.
@@ -45,10 +50,11 @@
       (println "Unrecognized date of birth format:" s)))
 
 (defn format-date [d]
-  (time/format output-date-pattern d))
+  (when d
+    (time/format output-date-pattern d)))
 
-(defn read-file [^File file separator]
-  (with-open [reader (io/reader file)]
+(defn read-records [readable separator]
+  (with-open [reader (io/reader readable)]
     (->> (csv/read-csv reader :separator separator)
          (map #(mapv string/trim %))
          (map #(zipmap fields %))

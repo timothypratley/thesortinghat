@@ -22,6 +22,10 @@
   (is (= "Unrecognized date of birth format: Not-a-date\n"
          (with-out-str (hat/parse-date "Not-a-date")))))
 
+(deftest format-record-test
+  (is (string? (hat/format-record {}))
+      "Missing fields should not cause an exception"))
+
 (defn six-rows-of-five? [xs]
   (and
     (= 6 (count xs))
@@ -29,13 +33,13 @@
 
 (deftest parse-file-test
   (is (six-rows-of-five?
-        (hat/read-file (io/resource "people.csv") \,)))
+        (hat/read-records (io/resource "people.csv") \,)))
 
   (is (six-rows-of-five?
-        (hat/read-file (io/resource "people.psv") \|)))
+        (hat/read-records (io/resource "people.psv") \|)))
 
   (is (six-rows-of-five?
-        (hat/read-file (io/resource "people.ssv") \space))))
+        (hat/read-records (io/resource "people.ssv") \space))))
 
 (deftest by-birth-date-test
   (is (= ["4/4/1986"
@@ -44,7 +48,7 @@
           "3/1/1985"
           "2/1/1985"
           "1/1/1985"]
-         (->> (hat/read-file (io/resource "people.csv") \,)
+         (->> (hat/read-records (io/resource "people.csv") \,)
               (hat/by-birth-date)
               (map :date-of-birth)
               (map hat/format-date)))

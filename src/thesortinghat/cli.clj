@@ -21,13 +21,15 @@
     (let [file (io/file (first args))]
       (if (.exists file)
         (do
-          (let [records (hat/read-file file (hat/detect-separator file))]
-            (println "*** By gender:")
-            (print-records (hat/by-gender records))
-            (println "*** By birth date:")
-            (print-records (hat/by-birth-date records))
-            (println "*** By last-name:")
-            (print-records (hat/by-last-name records)))
-          :done)
+          (if-let [separator (hat/detect-separator file)]
+            (let [records (hat/read-records file separator)]
+              (println "*** By gender:")
+              (print-records (hat/by-gender records))
+              (println "*** By birth date:")
+              (print-records (hat/by-birth-date records))
+              (println "*** By last-name:")
+              (print-records (hat/by-last-name records))
+              :done)
+            (print hat/no-separator-message)))
         (print not-found-message)))
     (print usage-message)))
