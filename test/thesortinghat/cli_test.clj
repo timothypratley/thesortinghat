@@ -12,7 +12,7 @@
   (is (= cli/not-found-message
          (with-out-str (cli/-main "nosuchfile"))))
 
-  (is (= hat/no-separator-message
+  (is (= cli/no-separator-message
          (with-out-str (cli/-main "resources/bad.csv"))))
 
   (with-out-str

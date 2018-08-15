@@ -7,9 +7,11 @@ Displays lists of people sorted by their attributes.
 
 ![Image of The Sorting Hat](https://images.pottermore.com/bxd3o8b291gf/2sLwPSOVqoOyCkEgSk0Oek/2c207d3a33dc10649554efc3014152da/MinervaMcGonagall_PM_B1C7M2_HarryPotterBeingSortedInGreatHall_Moment.jpg?w=1100&q=85)
 
+
 ## Usage
 
 The Sorting Hat is written in [Clojure](https://www.clojure.org/) and requires [Leiningen](https://leiningen.org/) to be installed.
+
 
 ### Command Line interface
 
@@ -25,6 +27,8 @@ Input files are expected to consist of only records separated by lines
 with field separated by commas, pipes, or spaces.
 Fields may be quoted if they contain a separator.
 
+Output is printed to stdout; the records are printed in 3 different sort orders.
+
 
 ### REST API
 
@@ -32,7 +36,11 @@ Start the server:
 
 `lein ring server`
 
-To submit records via curl:
+This will open a browser tab pointing at http://localhost:3000
+
+You can use the interface to test the functionality interactively.
+
+Alternatively, to submit records via curl:
 
 ```
 curl -X POST \
@@ -58,9 +66,10 @@ curl -X POST \
 
 To retrieve records:
 
-1. `curl http://localhost:3000/records/gender`
-2. `curl http://localhost:3000/records/birthdate`
-3. `curl http://localhost:3000/records/name`
+1. `curl http://localhost:3000/records/gender` Female first, then last name ascending
+2. `curl http://localhost:3000/records/birthdate` Birth date oldest to youngest
+3. `curl http://localhost:3000/records/name` Last name descending
+
 
 ## Developing
 

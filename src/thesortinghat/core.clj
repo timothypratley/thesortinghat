@@ -5,7 +5,10 @@
     [clojure.string :as string]
     [java-time :as time]))
 
-(def separators
+(def fields
+  [:last-name :first-name :gender :favorite-color :date-of-birth])
+
+(def field-separators
   [\, \| \space])
 
 (def output-date-pattern
@@ -17,23 +20,14 @@
    "yyyy/MM/dd"
    "yyyy-MM-dd"])
 
-(def fields
-  [:last-name :first-name :gender :favorite-color :date-of-birth])
-
-(def no-separator-message
-  (str "No records found. Expected something like '" (string/join ", " (map name fields)) "'.\n"))
-
-(def identifiers
-  [:last-name :first-name :date-of-birth])
-
-(defn field-count-match? [csv-string separator]
+(defn field-count-match? [csv separator]
   (= (count (first
-              (csv/read-csv csv-string :separator separator)))
+              (csv/read-csv csv :separator separator)))
      (count fields)))
 
-(defn detect-separator [csv-string]
+(defn detect-separator [csv]
   (first
-    (filter #(field-count-match? csv-string %) separators)))
+    (filter #(field-count-match? csv %) field-separators)))
 
 (defn parse-date
   "Given a string, tries to parse it from a list of expected patterns.
@@ -60,14 +54,19 @@
          (map #(update % :date-of-birth parse-date))
          (doall))))
 
-(defn by-gender [records]
-  (sort-by (juxt :gender :last-name) records))
+(defn by-gender-then-last-name [records]
+  (sort-by (juxt :gender
+                 (comp string/lower-case :last-name)
+                 (comp string/lower-case :first-name))
+           records))
 
-(defn by-birth-date [records]
-  (reverse (sort-by :date-of-birth records)))
+(defn oldest-to-youngest [records]
+  (sort-by :date-of-birth records))
 
-(defn by-last-name [records]
-  (sort-by :last-name records))
+(defn by-last-name-descending [records]
+  (reverse (sort-by (juxt (comp string/lower-case :last-name)
+                          (comp string/lower-case :first-name))
+                    records)))
 
 (defn format-record [record]
   (as-> record x

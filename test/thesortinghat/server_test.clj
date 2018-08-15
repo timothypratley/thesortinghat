@@ -4,30 +4,47 @@
     [thesortinghat.server :as server]
     [clojure.string :as string]
     [ring.mock.request :as mock]
-    [ring.util.io :as io]))
-
-(defn post [last-name first-name gender favorite-color birth-date]
-  (server/handler (assoc (mock/request :post "/records")
-                    :body (io/string-input-stream
-                            (string/join "," [last-name first-name gender favorite-color birth-date])))))
+    [cheshire.core :as json]))
 
 (deftest handler-test
   (is (= 200 (:status (server/handler (mock/request :get "/" nil)))))
   (with-out-str
-    (is (= 200 (:status (server/handler (assoc (mock/request :post "/records") :body (io/string-input-stream "Potter,Harry,male,green,1/1/1985")))))))
-  (is (= 400 (:status (server/handler (assoc (mock/request :post "/records") :body (io/string-input-stream "bad,test,record"))))))
+    (is (= 200 (:status (server/handler (mock/request :post "/records"
+                                                      "Potter,Harry,male,green,1/1/1985"))))
+        "should accept records in the body")
+    (is (= 200 (:status (server/handler (mock/request :post "/records"
+                                                      {:record "Potter,Harry,male,green,1/1/1985"}))))
+        "should accept form parameter 'record' as well for HTML form convenience"))
+  (is (= 200 (:status (server/handler (mock/request :post "/load")))))
+  (is (= 400 (:status (server/handler (mock/request :post "/records"
+                                                    "bad,test,record")))))
   (is (= 200 (:status (server/handler (mock/request :get "/records/gender")))))
   (is (= 200 (:status (server/handler (mock/request :get "/records/birthdate")))))
   (is (= 200 (:status (server/handler (mock/request :get "/records/name")))))
   (is (= 404 (:status (server/handler (mock/request :post "/invalid-url")))))
   (is (= 404 (:status (server/handler (mock/request :get "/invalid-url"))))))
 
+(defn handle-mock-record [& args]
+  (server/handler
+    (mock/request :post "/records"
+                  (string/join "," args))))
+
 (deftest stateful-test
   (testing "Received two records about Harry, and one about Hermione..."
     (with-out-str
-      (post "Potter" "Harry" "male" "blue" "1/1/1985")
-      (post "Potter" "Harry" "male" "green" "1/1/1985")
-      (post "Granger" "Hermione" "female" "red" "3/1/1985"))
-    (is (= "[{\"last-name\":\"Granger\",\"first-name\":\"Hermione\",\"date-of-birth\":\"3/1/1985\",\"gender\":\"female\",\"favorite-color\":\"red\"},{\"last-name\":\"Potter\",\"first-name\":\"Harry\",\"date-of-birth\":\"1/1/1985\",\"gender\":\"male\",\"favorite-color\":\"green\"}]"
-           (:body (server/handler (mock/request :get "/records/name"))))
-        "There is only two records (one for Harry, one for Hermione) returned in JSON in the correct order")))
+      (handle-mock-record "Potter" "Harry" "male" "blue" "1/1/1985")
+      (handle-mock-record "Potter" "Harry" "male" "green" "1/1/1985")
+      (handle-mock-record "Granger" "Hermione" "female" "red" "3/1/1985"))
+    (is (= [{"last-name" "Potter",
+            "first-name" "Harry",
+            "date-of-birth" "1/1/1985",
+            "gender" "male",
+            "favorite-color" "green"}
+           {"last-name" "Granger",
+            "first-name" "Hermione",
+            "date-of-birth" "3/1/1985",
+            "gender" "female",
+            "favorite-color" "red"}]
+          (json/parse-string
+             (:body (server/handler (mock/request :get "/records/name")))))
+        "should be only two records (one for Harry, one for Hermione) returned in JSON in the correct order")))
