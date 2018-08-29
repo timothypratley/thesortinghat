@@ -56,3 +56,31 @@
               (map :date-of-birth)
               (map hat/format-date)))
       "Dates should be sorted temporally, not by their string values"))
+
+(defn reverse-compare
+  "Instead of reversing the sort,
+  we can invert the comparator"
+  [a b]
+  (- (compare a b)))
+
+(defn by-last-name-descending2
+  [records]
+  (sort-by (juxt :last-name :first-name)
+           reverse-compare
+           records))
+
+(deftest alternative-sorting-approach-test
+  (is (= [["Pratley" "Timothy"]
+          ["Pratley" "Adam"]
+          ["Bernshteyn" "Ilya"]
+          ["Bernshteyn" "Alex"]]
+         (map (juxt :last-name :first-name)
+              (by-last-name-descending2
+                [{:last-name "Bernshteyn"
+                  :first-name "Ilya"}
+                 {:last-name "Pratley"
+                  :first-name "Timothy"}
+                 {:last-name "Pratley"
+                  :first-name "Adam"}
+                 {:last-name "Bernshteyn"
+                  :first-name "Alex"}])))))
